@@ -32,6 +32,8 @@ const VoteSurvey = () => {
             const response = await fetch(`http://localhost:8080/api/surveys/${slug}`);
             const data = await response.json();
             setSurvey(data);
+            console.log(data);
+            
         } catch (err) {
             console.error("Anket yüklenemedi:", err);
         }
@@ -132,7 +134,7 @@ const VoteSurvey = () => {
                 <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">{survey.title}</h1>
                 <button
                     onClick={handleRefresh}
-                    className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-all font-semibold text-sm sm:text-base"
+                    className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-all font-semibold text-sm sm:text-base cursor-pointer"
                 >
                     <FaSync className="h-4 w-4 sm:h-5 sm:w-5" />
                     Yenile
@@ -184,7 +186,7 @@ const VoteSurvey = () => {
                             </label>
                             <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
                                 <div
-                                    className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                                    className="bg-indigo-500 h-2 rounded-full transition-all duration-300"
                                     style={{ width: `${percentage}%` }}
                                 />
                             </div>
@@ -196,7 +198,7 @@ const VoteSurvey = () => {
             {canVote ? (
                 <button
                     onClick={handleVote}
-                    className="mt-6 sm:mt-8 w-full bg-gradient-to-r from-green-500 to-teal-500 text-white p-3 sm:p-4 rounded-lg hover:from-green-600 hover:to-teal-600 transition-all font-semibold text-sm sm:text-lg cursor-pointer"
+                    className="mt-6 sm:mt-8 w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white p-3 sm:p-4 rounded-lg hover:from-blue-600 hover:to-indigo-600 transition-colors font-semibold text-sm sm:text-lg cursor-pointer"
                 >
                     Oy Ver
                 </button>

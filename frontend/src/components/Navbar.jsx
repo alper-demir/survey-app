@@ -6,7 +6,7 @@ const Navbar = () => {
     const location = useLocation();
 
     return (
-        <nav className="bg-gradient-to-r from-blue-500 via-yellow-100 to-orange-200 text-white px-4 py-2 sm:px-6 sm:py-3 flex justify-between items-center shadow-lg">
+        <nav className="text-gray-800 px-4 py-2 sm:px-6 sm:py-3 flex justify-between items-center shadow-lg">
             <Link to="/" className="text-xl sm:text-2xl font-bold">
                 SurveyApp
             </Link>

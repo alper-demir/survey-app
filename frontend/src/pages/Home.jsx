@@ -81,7 +81,7 @@ function Home() {
                                 </div>
                                 <Link
                                     to={`/survey/${survey.slug}`}
-                                    className="inline-block bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-full hover:from-blue-600 hover:to-purple-600 transition-all font-semibold text-sm sm:text-base"
+                                    className="inline-block bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 transition-colors text-white px-4 sm:px-6 py-2 sm:py-3 rounded-full font-semibold text-sm sm:text-base"
                                 >
                                     Şimdi Oy Ver
                                 </Link>

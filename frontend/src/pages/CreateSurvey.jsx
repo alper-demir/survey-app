@@ -180,7 +180,7 @@ function CreateSurvey() {
                     </div>
                     <button
                         type="submit"
-                        className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white p-2 sm:p-3 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all font-semibold text-sm sm:text-base cursor-pointer"
+                        className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 transition-colors text-white p-2 sm:p-3 rounded-lg font-semibold text-sm sm:text-base cursor-pointer"
                     >
                         Anketi Oluştur
                     </button>
