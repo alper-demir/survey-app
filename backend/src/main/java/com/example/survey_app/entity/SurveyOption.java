@@ -19,6 +19,8 @@ public class SurveyOption {
 
     private int voteCount = 0;
 
+    private int position;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "survey_id")
     @JsonBackReference

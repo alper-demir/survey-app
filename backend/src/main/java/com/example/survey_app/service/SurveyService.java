@@ -49,6 +49,10 @@ public class SurveyService {
                 })
                 .collect(Collectors.toList());
 
+        for (int i = 0; i < options.size(); i++) {
+            options.get(i).setPosition(i + 1);
+        }
+
         // Seçenekleri kaydet
         optionRepository.saveAll(options);
 

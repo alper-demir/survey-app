@@ -32,6 +32,7 @@ public class Survey {
 
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
+    @OrderBy("position ASC")
     private List<SurveyOption> options;
 
     @Column

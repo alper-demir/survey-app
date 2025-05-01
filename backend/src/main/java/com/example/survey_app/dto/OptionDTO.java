@@ -8,4 +8,5 @@ import lombok.Data;
 public class OptionDTO {
     private String text;
     private int voteCount;
+    private int position;
 }
