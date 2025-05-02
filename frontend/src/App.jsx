@@ -5,6 +5,7 @@ import VotingPage from "./pages/VoteSurvey";
 import MainLayout from "./layouts/MainLayout";
 import ToasterProvider from "./components/ToasterProvider";
 import AdminPanel from './pages/AdminPanel';
+import About from "./pages/About";
 
 function App() {
     return (
@@ -15,6 +16,7 @@ function App() {
                     <Route path="/create" element={<CreateSurvey />} />
                     <Route path="/survey/:slug" element={<VotingPage />} />
                     <Route path="/admin" element={<AdminPanel />} />
+                    <Route path="/about" element={<About />} />
                 </Route>
             </Routes>
             <ToasterProvider />
