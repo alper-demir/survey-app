@@ -106,20 +106,21 @@ const VoteSurvey = () => {
     const canVote = survey.active && !surveyExpired && !voted;
 
     return (
-        <div className="px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 bg-white shadow-xl rounded-2xl mt-8 sm:mt-12">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3 sm:gap-0">
-                    <div>
-                        <p className="text-gray-500 text-xs sm:text-sm">
+        <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+            <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4 sm:py-6 bg-white shadow-lg rounded-xl mt-6 sm:mt-8">
+                {/* Üst Bilgi Bölümü */}
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 sm:mb-4 gap-2 sm:gap-0">
+                    <div className="text-xs sm:text-sm text-gray-500 space-y-1">
+                        <p>
                             Oluşturulma: <span className="font-medium">{formatDate(survey.createdAt)}</span>
                         </p>
-                        <p className="text-gray-500 text-xs sm:text-sm">
+                        <p>
                             Geçerlilik: <span className="font-medium">{formatDate(survey.expiresAt)}</span>
                         </p>
                     </div>
                     <div className="flex items-center gap-2">
                         <span
-                            className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${survey.active && !surveyExpired
+                            className={`px-2 py-1 rounded-full text-xs font-medium ${survey.active && !surveyExpired
                                 ? "bg-green-100 text-green-700"
                                 : "bg-red-100 text-red-700"
                                 }`}
@@ -131,47 +132,50 @@ const VoteSurvey = () => {
                                     : "Pasif"}
                         </span>
                         {surveyExpired && (
-                            <span className="text-red-500 text-xs sm:text-sm font-medium">Oy kullanılamaz</span>
+                            <span className="text-red-500 text-xs font-medium">Oy kullanılamaz</span>
                         )}
                     </div>
                 </div>
 
+                {/* Başlık ve Yenile Butonu */}
+                {!surveyExpired && (
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 sm:mb-4 gap-2 sm:gap-0">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">{survey.title}</h1>
+                        <button
+                            onClick={handleRefresh}
+                            className="flex items-center gap-1.5 bg-blue-500 text-white px-3 py-1.5 rounded-full hover:bg-blue-600 transition-all font-medium text-sm cursor-pointer"
+                        >
+                            <FaSync className="h-4 w-4" />
+                            Yenile
+                        </button>
+                    </div>
+                )}
 
-                {
-                    !surveyExpired && (
-                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3 sm:gap-0">
-                            <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">{survey.title}</h1>
-                            <button
-                                onClick={handleRefresh}
-                                className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-all font-semibold text-sm sm:text-base cursor-pointer"
-                            >
-                                <FaSync className="h-4 w-4 sm:h-5 sm:w-5" />
-                                Yenile
-                            </button>
-                        </div>
-                    )
-                }
+                {/* Açıklama */}
+                <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-3 sm:mb-4">
+                    {survey.description}
+                </p>
 
-                <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-4 sm:mb-6">{survey.description}</p>
-
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3 sm:gap-0">
+                {/* Toplam Oy ve Çoklu Seçim Bilgisi */}
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 sm:mb-4 gap-2 sm:gap-0">
                     <p className="text-gray-500 text-xs sm:text-sm">
                         Toplam Kullanılan Oy: <span className="font-medium">{totalVotes}</span>
                     </p>
                     <p className="text-blue-600 text-xs sm:text-sm font-medium">
                         {survey.multipleChoice
-                            ? "Bu anket birden fazla seçeneği işaretlemeye izin veriyor."
-                            : "Bu anket yalnızca tek bir seçeneği işaretlemeye izin veriyor."}
+                            ? "Birden fazla seçenek işaretlenebilir."
+                            : "Yalnızca tek seçenek işaretlenebilir."}
                     </p>
                 </div>
 
-                <div className="flex flex-col gap-3 sm:gap-4" ref={animationParent}>
+                {/* Seçenekler */}
+                <div className="flex flex-col gap-2 sm:gap-3" ref={animationParent}>
                     {survey.options.map((option) => {
                         const percentage = totalVotes > 0 ? (option.voteCount / totalVotes) * 100 : 0;
                         return (
                             <div
                                 key={option.id}
-                                className="flex flex-col p-3 sm:p-4 bg-gray-50 rounded-lg shadow-sm hover:bg-gray-100 transition"
+                                className="flex flex-col p-3 bg-gray-50 rounded-lg shadow-sm hover:bg-gray-100 transition"
                             >
                                 <label className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
                                     <div className="flex items-center">
@@ -186,17 +190,17 @@ const VoteSurvey = () => {
                                             }
                                             onChange={() => handleOptionChange(option.id)}
                                             disabled={!canVote}
-                                            className="mr-2 sm:mr-3 accent-blue-500 h-4 w-4 sm:h-5 sm:w-5"
+                                            className="mr-2 accent-blue-500 h-4 w-4"
                                         />
-                                        <span className="text-gray-700 text-sm sm:text-lg">{option.text}</span>
+                                        <span className="text-gray-700 text-sm sm:text-base">{option.text}</span>
                                     </div>
-                                    <div className="text-gray-500 text-xs sm:text-sm">
+                                    <div className="text-gray-500 text-xs">
                                         {option.voteCount} oy ({percentage.toFixed(1)}%)
                                     </div>
                                 </label>
-                                <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                                <div className="w-full bg-gray-200 rounded-full h-1.5 mt-2">
                                     <div
-                                        className="bg-indigo-500 h-2 rounded-full transition-all duration-300"
+                                        className="bg-indigo-500 h-1.5 rounded-full transition-all duration-300"
                                         style={{ width: `${percentage}%` }}
                                     />
                                 </div>
@@ -205,15 +209,16 @@ const VoteSurvey = () => {
                     })}
                 </div>
 
+                {/* Oy Ver Butonu veya Mesaj */}
                 {canVote ? (
                     <button
                         onClick={handleVote}
-                        className="mt-6 sm:mt-8 w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white p-3 sm:p-4 rounded-lg hover:from-blue-600 hover:to-indigo-600 transition-colors font-semibold text-sm sm:text-lg cursor-pointer"
+                        className="mt-4 sm:mt-6 w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white p-2.5 sm:p-3 rounded-lg hover:from-blue-600 hover:to-indigo-600 transition-colors font-medium text-sm sm:text-base cursor-pointer"
                     >
                         Oy Ver
                     </button>
                 ) : (
-                    <p className="mt-6 sm:mt-8 text-center text-gray-500 text-sm sm:text-base font-medium">
+                    <p className="mt-4 sm:mt-6 text-center text-gray-500 text-sm font-medium">
                         {voted
                             ? "Zaten oy kullandınız."
                             : surveyExpired

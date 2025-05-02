@@ -96,7 +96,7 @@ function CreateSurvey() {
                             Linki Kopyala
                         </button>
                     </div>,
-                    { duration: 5000 }
+                    { duration: 7000 }
                 );
                 navigate("/");
             })
@@ -107,31 +107,36 @@ function CreateSurvey() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-3xl mx-auto p-4 sm:p-6 bg-white shadow-xl rounded-2xl mt-6 sm:mt-10">
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-5">Anket Oluştur</h1>
+        <div className="min-h-screen bg-gray-50 px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+            <div className="max-w-2xl mx-auto p-4 sm:p-6 bg-white shadow-lg rounded-xl mt-6 sm:mt-8">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-3 sm:mb-4">Anket Oluştur</h1>
                 <form onSubmit={handleSubmit}>
-                    <div className="mb-4 sm:mb-5">
+                    {/* Başlık */}
+                    <div className="mb-3 sm:mb-4">
                         <label className="block text-gray-700 font-medium text-xs sm:text-sm mb-1">Başlık</label>
                         <input
                             type="text"
                             placeholder="Anket başlığını giriniz"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
-                            className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm sm:text-base"
+                            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm"
                             required
                         />
                     </div>
-                    <div className="mb-4 sm:mb-5">
+
+                    {/* Açıklama */}
+                    <div className="mb-3 sm:mb-4">
                         <label className="block text-gray-700 font-medium text-xs sm:text-sm mb-1">Açıklama</label>
                         <textarea
                             placeholder="Anket açıklamasını giriniz (isteğe bağlı)"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
-                            className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm sm:text-base"
+                            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm"
                         />
                     </div>
-                    <div className="mb-4 sm:mb-5">
+
+                    {/* Seçenek Sayısı */}
+                    <div className="mb-3 sm:mb-4">
                         <label className="block text-gray-700 font-medium text-xs sm:text-sm mb-1">
                             Toplam Kaç Seçenek Eklemek İstiyorsunuz?
                         </label>
@@ -141,11 +146,13 @@ function CreateSurvey() {
                             value={optionCount}
                             onChange={handleOptionCountChange}
                             onBlur={handleOptionCountBlur}
-                            className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm sm:text-base"
+                            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm"
                             required
                         />
                     </div>
-                    <div className="mb-4 sm:mb-5">
+
+                    {/* Seçenekler */}
+                    <div className="mb-3 sm:mb-4">
                         <label className="block text-gray-700 font-medium text-xs sm:text-sm mb-1">Seçenekler</label>
                         <div ref={animationParent}>
                             {options.map((opt, index) => (
@@ -155,7 +162,7 @@ function CreateSurvey() {
                                         placeholder={`Seçenek ${index + 1}`}
                                         value={opt}
                                         onChange={(e) => updateOption(index, e.target.value)}
-                                        className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm sm:text-base"
+                                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm"
                                         required
                                     />
                                     {index >= 2 && (
@@ -164,7 +171,7 @@ function CreateSurvey() {
                                             onClick={() => removeOption(index)}
                                             className="text-red-500 hover:text-red-700 transition-all"
                                         >
-                                            <FaTrash className="h-4 w-4 sm:h-5 sm:w-5" />
+                                            <FaTrash className="h-4 w-4" />
                                         </button>
                                     )}
                                 </div>
@@ -173,12 +180,14 @@ function CreateSurvey() {
                         <button
                             type="button"
                             onClick={addOption}
-                            className="bg-gray-200 text-gray-700 px-4 sm:px-5 py-1 sm:py-2 rounded-full hover:bg-gray-300 transition-all font-medium text-xs sm:text-sm"
+                            className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full hover:bg-gray-300 transition-all font-medium text-xs"
                         >
                             Seçenek Ekle
                         </button>
                     </div>
-                    <div className="mb-4 sm:mb-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+
+                    {/* Çoklu Seçim ve Sonuçlar Herkese Açık */}
+                    <div className="mb-3 sm:mb-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                         <label className="flex items-center cursor-pointer">
                             <input
                                 type="checkbox"
@@ -198,7 +207,9 @@ function CreateSurvey() {
                             <span className="text-gray-700 font-medium text-xs sm:text-sm">Sonuçlar Herkese Açık</span>
                         </label>
                     </div>
-                    <div className="mb-4 sm:mb-5">
+
+                    {/* Sonlanma Tarihi */}
+                    <div className="mb-3 sm:mb-4">
                         <label className="block text-gray-700 font-medium text-xs sm:text-sm mb-1">
                             Sonlanma Tarihi
                         </label>
@@ -208,12 +219,14 @@ function CreateSurvey() {
                             type="datetime-local"
                             value={expiresAt}
                             onChange={(e) => setExpiresAt(e.target.value)}
-                            className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm sm:text-base"
+                            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm"
                         />
                     </div>
+
+                    {/* Anketi Oluştur Butonu */}
                     <button
                         type="submit"
-                        className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 transition-colors text-white p-2 sm:p-3 rounded-lg font-semibold text-sm sm:text-base cursor-pointer"
+                        className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 transition-colors text-white p-2 sm:p-2.5 rounded-lg font-medium text-sm cursor-pointer"
                     >
                         Anketi Oluştur
                     </button>
