@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface SurveyRepository extends JpaRepository<Survey, Long> {
@@ -18,6 +19,8 @@ public interface SurveyRepository extends JpaRepository<Survey, Long> {
     boolean existsBySlug(String slug);
 
     Page<Survey> findAll(Pageable pageable);
+
+    List<Survey> findByIsActiveTrue();
 
     Page<Survey> findByIsPublicResult(Boolean isPublicResult, Pageable pageable);
 

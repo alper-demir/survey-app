@@ -98,7 +98,7 @@ public class SurveyService {
     }
 
     public List<Survey> getAllSurveys() {
-        return surveyRepository.findAll();
+        return surveyRepository.findByIsActiveTrue();
     }
 
     public Survey getSurveyBySlug(String slug) {
