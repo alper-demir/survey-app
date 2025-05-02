@@ -151,7 +151,7 @@ function Home() {
                                                 <button
                                                     onClick={() => handlePageChange(currentPage - 1)}
                                                     disabled={currentPage === 0}
-                                                    className={`cursor-pointer px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 ${currentPage === 0 ? "cursor-not-allowed opacity-50" : ""}`}
+                                                    className={`cursor-pointer disabled:cursor-not-allowed px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 ${currentPage === 0 ? "cursor-not-allowed opacity-50" : ""}`}
                                                 >
                                                     <span className="sr-only">Previous</span>
                                                     <svg
@@ -185,7 +185,7 @@ function Home() {
                                                 <button
                                                     onClick={() => handlePageChange(currentPage + 1)}
                                                     disabled={currentPage === totalPages - 1}
-                                                    className={`cursor-pointer px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 ${currentPage === totalPages - 1 ? "cursor-not-allowed opacity-50" : ""}`}
+                                                    className={`cursor-pointer disabled:cursor-not-allowed px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 ${currentPage === totalPages - 1 ? "cursor-not-allowed opacity-50" : ""}`}
                                                 >
                                                     <span className="sr-only">Next</span>
                                                     <svg
