@@ -34,6 +34,7 @@ public class AdminController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) Boolean isActive,
+            @RequestParam(required = false) Boolean isExpired,
             @RequestParam(required = false) Boolean isMultipleChoice,
             @RequestParam(required = false) Boolean isPublicResult,
             @RequestParam(required = false) String title,
@@ -45,12 +46,12 @@ public class AdminController {
                 Sort.by(sortBy).descending();
 
         Pageable pageable = PageRequest.of(page, size, sort);
-        return adminService.getSurveyStats(pageable, isActive, isMultipleChoice, isPublicResult, title);
+        return adminService.getSurveyStats(pageable, isActive, isExpired, isMultipleChoice, isPublicResult, title);
     }
 
-    @PatchMapping("/surveys/{id}/deactivate")
-    public ResponseEntity<?> deactivateSurvey(@PathVariable Long id) {
-        surveyService.setSurveyActiveStatus(id, false);
+    @PatchMapping("/surveys/{id}/toggle-status")
+    public ResponseEntity<?> toggleSurveyStatus(@PathVariable Long id) {
+        surveyService.toggleSurveyActiveStatus(id);
         return ResponseEntity.ok().build();
     }
 }

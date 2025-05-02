@@ -24,16 +24,21 @@ public interface SurveyRepository extends JpaRepository<Survey, Long> {
     Page<Survey> findByIsMultipleChoice(Boolean isMultipleChoice, Pageable pageable);
 
     @Query("""
-                SELECT s FROM Survey s
-                WHERE (:isActive IS NULL OR s.isActive = :isActive)
-                  AND (:isMultipleChoice IS NULL OR s.isMultipleChoice = :isMultipleChoice)
-                  AND (:isPublicResult IS NULL OR s.isPublicResult = :isPublicResult)
-                  AND (:title IS NULL OR LOWER(CAST(s.title AS string)) LIKE LOWER(CONCAT('%', CAST(:title AS string), '%')))
+                    SELECT s FROM Survey s
+                    WHERE (:isActive IS NULL OR s.isActive = :isActive)
+                      AND (:isMultipleChoice IS NULL OR s.isMultipleChoice = :isMultipleChoice)
+                      AND (:isPublicResult IS NULL OR s.isPublicResult = :isPublicResult)
+                      AND (:title IS NULL OR LOWER(CAST(s.title AS string)) LIKE LOWER(CONCAT('%', CAST(:title AS string), '%')))
+                      AND (:isExpired IS NULL OR 
+                           (:isExpired = true AND s.expiresAt < :now) OR 
+                           (:isExpired = false AND s.expiresAt >= :now))
             """)
     Page<Survey> findWithFilters(@Param("isActive") Boolean isActive,
                                  @Param("isMultipleChoice") Boolean isMultipleChoice,
                                  @Param("isPublicResult") Boolean isPublicResult,
                                  @Param("title") String title,
+                                 @Param("isExpired") Boolean isExpired,
+                                 @Param("now") LocalDateTime now,
                                  Pageable pageable);
 
     // Admin istatistikleri için

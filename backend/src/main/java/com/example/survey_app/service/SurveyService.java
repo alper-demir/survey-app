@@ -113,4 +113,11 @@ public class SurveyService {
         surveyRepository.save(survey);
     }
 
+    public void toggleSurveyActiveStatus(Long id) {
+        Survey survey = surveyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Anket bulunamadı: " + id));
+        survey.setActive(!survey.isActive());
+        surveyRepository.save(survey);
+    }
+
 }

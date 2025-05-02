@@ -2,10 +2,12 @@ package com.example.survey_app.service;
 
 import com.example.survey_app.dto.AdminOverviewDTO;
 import com.example.survey_app.dto.SurveyAdminStatDTO;
+import com.example.survey_app.entity.Survey;
 import com.example.survey_app.entity.SurveyOption;
 import com.example.survey_app.repository.SurveyRepository;
 import com.example.survey_app.repository.VoteRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +37,6 @@ public class AdminService {
         long publicSurveys = surveyRepo.countByIsPublicResultTrue();
         long multipleChoiceSurveys = surveyRepo.countByIsMultipleChoiceTrue();
 
-        // Günlük oy sayıları
         List<Object[]> rows = voteRepo.countVotesGroupedByDate();
         Map<String, Long> dailyVotes = rows.stream()
                 .collect(Collectors.toMap(
@@ -57,13 +58,21 @@ public class AdminService {
 
     public Page<SurveyAdminStatDTO> getSurveyStats(Pageable pageable,
                                                    Boolean isActive,
+                                                   Boolean isExpired,
                                                    Boolean isMultipleChoice,
                                                    Boolean isPublicResult,
                                                    String title) {
         if (title == null || title.trim().isEmpty()) {
             title = null;
         }
-        return surveyRepo.findWithFilters(isActive, isMultipleChoice, isPublicResult, title, pageable)
+
+        LocalDateTime now = LocalDateTime.now();
+
+        Page<Survey> surveyPage = surveyRepo.findWithFilters(isActive, isMultipleChoice, isPublicResult, title, isExpired, now, pageable);
+
+        // Anketleri SurveyAdminStatDTO'ya dönüştür
+        List<SurveyAdminStatDTO> surveyStats = surveyPage.getContent().stream()
+                .filter(s -> s.getExpiresAt() != null) // expiresAt null olanları filtrele
                 .map(s -> {
                     long votes = s.getOptions().stream()
                             .mapToLong(SurveyOption::getVoteCount)
@@ -78,8 +87,11 @@ public class AdminService {
                             s.isMultipleChoice(),
                             s.isActive(),
                             s.getCreatedAt().toString(),
-                            s.getExpiresAt().toString()
+                            s.getExpiresAt() != null ? s.getExpiresAt().toString() : null
                     );
-                });
+                })
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(surveyStats, pageable, surveyPage.getTotalElements());
     }
 }
