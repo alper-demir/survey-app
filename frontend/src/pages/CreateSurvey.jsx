@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash, FaCopy } from "react-icons/fa";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import toast from "react-hot-toast";
 
 function CreateSurvey() {
     const [title, setTitle] = useState("");
@@ -14,19 +15,19 @@ function CreateSurvey() {
     const navigate = useNavigate();
     const [animationParent] = useAutoAnimate();
 
-    const handleOptionCountChange = (e) => {
-        const count = parseInt(e.target.value) || 0;
-        setOptionCount(count);
-    };
-
     const handleOptionCountBlur = () => {
         if (optionCount < 2) {
-            alert("En az 2 seçenek eklemelisiniz!");
+            toast.error("En az 2 seçenek eklemelisiniz!"); // Hata bildirimi
             setOptionCount(2);
             setOptions(["", ""]);
         } else {
             setOptions(Array(optionCount).fill(""));
         }
+    };
+
+    const handleOptionCountChange = (e) => {
+        const count = parseInt(e.target.value) || 0;
+        setOptionCount(count);
     };
 
     const addOption = () => {
@@ -42,7 +43,7 @@ function CreateSurvey() {
 
     const removeOption = (index) => {
         if (options.length <= 2) {
-            alert("En az 2 seçenek olmalı!");
+            toast.error("En az 2 seçenek olmalı!");
             return;
         }
         const newOptions = options.filter((_, i) => i !== index);
@@ -53,11 +54,11 @@ function CreateSurvey() {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (options.length < 2) {
-            alert("En az 2 seçenek eklemelisiniz!");
+            toast.error("En az 2 seçenek eklemelisiniz!");
             return;
         }
         if (options.some((opt) => !opt)) {
-            alert("Tüm seçenekler dolu olmalıdır!");
+            toast.error("Tüm seçenekler dolu olmalıdır!");
             return;
         }
 
@@ -69,10 +70,30 @@ function CreateSurvey() {
         })
             .then((res) => res.json())
             .then((data) => {
-                alert("Anket oluşturuldu! Link: " + window.location.origin + "/survey/" + data.slug);
+                const surveyLink = `${window.location.origin}/survey/${data.slug}`;
+                // Başarı bildirimi: Linki Kopyala butonu ile
+                toast.success(
+                    <div className="flex items-center gap-2">
+                        <span>Anket başarıyla oluşturuldu!</span>
+                        <button
+                            onClick={() => {
+                                navigator.clipboard.writeText(surveyLink);
+                                toast.success("Link kopyalandı!");
+                            }}
+                            className="flex items-center gap-1 bg-indigo-500 text-white px-2 py-1 rounded-md hover:bg-indigo-600 transition-all"
+                        >
+                            <FaCopy className="h-4 w-4" />
+                            Linki Kopyala
+                        </button>
+                    </div>,
+                    { duration: 5000 } // Bildirim 5 saniye görünecek
+                );
                 navigate("/");
             })
-            .catch((err) => console.error("Anket oluşturulamadı:", err));
+            .catch((err) => {
+                console.error("Anket oluşturulamadı:", err);
+                toast.error("Anket oluşturulamadı. Bir hata oluştu."); // Hata bildirimi
+            });
     };
 
     return (
@@ -172,6 +193,7 @@ function CreateSurvey() {
                             Geçerlilik Süresi
                         </label>
                         <input
+                            required
                             type="datetime-local"
                             value={expiresAt}
                             onChange={(e) => setExpiresAt(e.target.value)}

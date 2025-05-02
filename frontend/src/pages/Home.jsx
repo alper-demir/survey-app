@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import toast from "react-hot-toast";
 
 const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -21,7 +22,7 @@ const isExpired = (expiresAt) => {
 
 function Home() {
     const [surveys, setSurveys] = useState([]);
-    const [animationParent] = useAutoAnimate(); // AutoAnimate için referans
+    const [animationParent] = useAutoAnimate();
 
     useEffect(() => {
         fetch("http://localhost:8080/api/surveys")
@@ -30,16 +31,19 @@ function Home() {
                 setSurveys(data);
                 console.log(data);
             })
-            .catch((err) => console.error("Anketler yüklenemedi:", err));
+            .catch((err) => {
+                console.error("Anketler yüklenemedi:", err);
+                toast.error("Anketler yüklenemedi. Bir hata oluştu.");
+            });
     }, []);
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" ref={animationParent}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8">Tüm Anketler</h2>
             {surveys.length === 0 ? (
                 <p className="text-center text-gray-500 text-base sm:text-lg">Henüz anket bulunmamaktadır.</p>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6" ref={animationParent}>
                     {surveys.map((survey) => {
                         const surveyExpired = isExpired(survey.expiresAt);
                         const totalVotes = survey.options.reduce(
@@ -49,7 +53,8 @@ function Home() {
                         return (
                             <div
                                 key={survey.id}
-                                className="bg-white shadow-md rounded-2xl p-4 sm:p-6 hover:shadow-xl transition transform hover:scale-105">
+                                className="bg-white shadow-md rounded-2xl p-4 sm:p-6 hover:shadow-xl transition transform hover:scale-105"
+                            >
                                 <div className="flex justify-between items-center mb-3 sm:mb-4">
                                     <h2 className="text-lg sm:text-xl font-semibold text-gray-800 line-clamp-1">
                                         {survey.title}
@@ -67,7 +72,9 @@ function Home() {
                                                 : "Pasif"}
                                     </span>
                                 </div>
-                                <p className="text-gray-600 text-sm sm:text-base line-clamp-2 mb-3 sm:mb-4">{survey.description}</p>
+                                <p className="text-gray-600 text-sm sm:text-base line-clamp-2 mb-3 sm:mb-4">
+                                    {survey.description}
+                                </p>
                                 <div className="text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">
                                     <p>
                                         Oluşturulma: <span className="font-medium">{formatDate(survey.createdAt)}</span>
