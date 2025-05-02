@@ -127,7 +127,7 @@ const VoteSurvey = () => {
                             {survey.active && !surveyExpired
                                 ? "Aktif"
                                 : surveyExpired
-                                    ? "Geçerlilik Süresi Doldu"
+                                    ? "Sonlandı"
                                     : "Pasif"}
                         </span>
                         {surveyExpired && (
@@ -136,16 +136,21 @@ const VoteSurvey = () => {
                     </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3 sm:gap-0">
-                    <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">{survey.title}</h1>
-                    <button
-                        onClick={handleRefresh}
-                        className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-all font-semibold text-sm sm:text-base cursor-pointer"
-                    >
-                        <FaSync className="h-4 w-4 sm:h-5 sm:w-5" />
-                        Yenile
-                    </button>
-                </div>
+
+                {
+                    !surveyExpired && (
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3 sm:gap-0">
+                            <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">{survey.title}</h1>
+                            <button
+                                onClick={handleRefresh}
+                                className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-all font-semibold text-sm sm:text-base cursor-pointer"
+                            >
+                                <FaSync className="h-4 w-4 sm:h-5 sm:w-5" />
+                                Yenile
+                            </button>
+                        </div>
+                    )
+                }
 
                 <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-4 sm:mb-6">{survey.description}</p>
 
@@ -212,7 +217,7 @@ const VoteSurvey = () => {
                         {voted
                             ? "Zaten oy kullandınız."
                             : surveyExpired
-                                ? "Bu anketin geçerlilik süresi dolmuş."
+                                ? "Bu anket sonlandı."
                                 : "Bu anket şu anda aktif değil."}
                     </p>
                 )}

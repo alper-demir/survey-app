@@ -4,6 +4,7 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 import toast from "react-hot-toast";
 
 const formatDate = (dateString) => {
+    if (!dateString) return "Bilinmeyen";
     const date = new Date(dateString);
     return date.toLocaleString("tr-TR", {
         day: "numeric",
@@ -15,6 +16,7 @@ const formatDate = (dateString) => {
 };
 
 const isExpired = (expiresAt) => {
+    if (!expiresAt) return false;
     const expiryDate = new Date(expiresAt);
     const now = new Date();
     return now > expiryDate;
@@ -50,6 +52,8 @@ function Home() {
                             (sum, option) => sum + option.voteCount,
                             0
                         );
+                        const isActiveAndNotExpired = survey.active && !surveyExpired;
+
                         return (
                             <div
                                 key={survey.id}
@@ -60,15 +64,17 @@ function Home() {
                                         {survey.title}
                                     </h2>
                                     <span
-                                        className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${survey.active && !surveyExpired
+                                        className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${isActiveAndNotExpired
                                             ? "bg-green-100 text-green-700"
-                                            : "bg-red-100 text-red-700"
+                                            : surveyExpired
+                                                ? "bg-yellow-100 text-yellow-700"
+                                                : "bg-red-100 text-red-700"
                                             }`}
                                     >
-                                        {survey.active && !surveyExpired
+                                        {isActiveAndNotExpired
                                             ? "Aktif"
                                             : surveyExpired
-                                                ? "Anket sonlandı"
+                                                ? "Anket Sonlandı"
                                                 : "Pasif"}
                                     </span>
                                 </div>
@@ -86,12 +92,28 @@ function Home() {
                                         Toplam Oy: <span className="font-medium">{totalVotes}</span>
                                     </p>
                                 </div>
-                                <Link
-                                    to={`/survey/${survey.slug}`}
-                                    className="inline-block bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 transition-colors text-white px-4 sm:px-6 py-2 sm:py-3 rounded-full font-semibold text-sm sm:text-base"
-                                >
-                                    Şimdi Oy Ver
-                                </Link>
+                                {isActiveAndNotExpired ? (
+                                    <Link
+                                        to={`/survey/${survey.slug}`}
+                                        className="inline-block bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 transition-colors text-white px-4 sm:px-6 py-2 sm:py-3 rounded-full font-semibold text-sm sm:text-base"
+                                    >
+                                        Şimdi Oy Ver
+                                    </Link>
+                                ) : surveyExpired && survey.publicResult ? (
+                                    <Link
+                                        to={`/survey/${survey.slug}`}
+                                        className="inline-block bg-gradient-to-r from-gray-500 to-gray-700 hover:from-gray-600 hover:to-gray-800 transition-colors text-white px-4 sm:px-6 py-2 sm:py-3 rounded-full font-semibold text-sm sm:text-base"
+                                    >
+                                        Sonuçları Görüntüle
+                                    </Link>
+                                ) : (
+                                    <button
+                                        disabled
+                                        className="inline-block bg-gray-300 text-gray-500 px-4 sm:px-6 py-2 sm:py-3 rounded-full font-semibold text-sm sm:text-base cursor-not-allowed"
+                                    >
+                                        Anket Kapalı
+                                    </button>
+                                )}
                             </div>
                         );
                     })}
