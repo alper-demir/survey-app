@@ -8,6 +8,9 @@ import com.example.survey_app.entity.SurveyOption;
 import com.example.survey_app.repository.SurveyOptionRepository;
 import com.example.survey_app.repository.SurveyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,11 +18,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class SurveyService {
 
     private final SurveyRepository surveyRepository;
     private final SurveyOptionRepository optionRepository;
+
+    public SurveyService(SurveyRepository surveyRepository, SurveyOptionRepository optionRepository) {
+        this.surveyRepository = surveyRepository;
+        this.optionRepository = optionRepository;
+    }
 
     public SurveyResponseDTO createSurvey(SurveyRequestDTO request) {
         // 1. Survey nesnesini oluştur
@@ -97,8 +104,9 @@ public class SurveyService {
                 .build();
     }
 
-    public List<Survey> getAllSurveys() {
-        return surveyRepository.findByIsActiveTrue();
+    public Page<Survey> getAllSurveys(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return surveyRepository.findByIsActiveTrue(pageable);
     }
 
     public Survey getSurveyBySlug(String slug) {

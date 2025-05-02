@@ -20,7 +20,7 @@ public interface SurveyRepository extends JpaRepository<Survey, Long> {
 
     Page<Survey> findAll(Pageable pageable);
 
-    List<Survey> findByIsActiveTrue();
+    Page<Survey> findByIsActiveTrue(Pageable pageable);
 
     Page<Survey> findByIsPublicResult(Boolean isPublicResult, Pageable pageable);
 

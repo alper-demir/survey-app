@@ -4,6 +4,7 @@ import com.example.survey_app.dto.SurveyRequestDTO;
 import com.example.survey_app.dto.SurveyResponseDTO;
 import com.example.survey_app.entity.Survey;
 import com.example.survey_app.service.SurveyService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +28,10 @@ public class SurveyController {
     }
 
     @GetMapping
-    public List<Survey> getAllSurveys() {
-        return surveyService.getAllSurveys();
+    public Page<Survey> getAllSurveys(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "30") int size) {
+        return surveyService.getAllSurveys(page, size);
     }
 
     @GetMapping("/{slug}")
