@@ -15,9 +15,13 @@ function CreateSurvey() {
     const navigate = useNavigate();
     const [animationParent] = useAutoAnimate();
 
+    // datetime-local formatına çevir
+    const now = new Date(Date.now());
+    const minDateTime = now.toISOString().slice(0, 16); // "2025-05-02T15:05" formatına çevirir
+
     const handleOptionCountBlur = () => {
         if (optionCount < 2) {
-            toast.error("En az 2 seçenek eklemelisiniz!"); // Hata bildirimi
+            toast.error("En az 2 seçenek eklemelisiniz!");
             setOptionCount(2);
             setOptions(["", ""]);
         } else {
@@ -62,6 +66,13 @@ function CreateSurvey() {
             return;
         }
 
+        const selectedDate = new Date(expiresAt);
+        const now = new Date();
+        if (selectedDate <= now) {
+            toast.error("Anketin sona erme tarihi mevcut tarihten daha ileri olmalıdır!");
+            return;
+        }
+
         const surveyData = { title, description, options, multipleChoice, publicResult, expiresAt };
         fetch("http://localhost:8080/api/surveys", {
             method: "POST",
@@ -71,7 +82,6 @@ function CreateSurvey() {
             .then((res) => res.json())
             .then((data) => {
                 const surveyLink = `${window.location.origin}/survey/${data.slug}`;
-                // Başarı bildirimi: Linki Kopyala butonu ile
                 toast.success(
                     <div className="flex items-center gap-2">
                         <span>Anket başarıyla oluşturuldu!</span>
@@ -80,19 +90,19 @@ function CreateSurvey() {
                                 navigator.clipboard.writeText(surveyLink);
                                 toast.success("Link kopyalandı!");
                             }}
-                            className="flex items-center gap-1 bg-indigo-500 text-white px-2 py-1 rounded-md hover:bg-indigo-600 transition-all"
+                            className="flex items-center gap-1 bg-indigo-500 text-white px-2 py-1 rounded-md hover:bg-indigo-600 transition-all cursor-pointer"
                         >
                             <FaCopy className="h-4 w-4" />
                             Linki Kopyala
                         </button>
                     </div>,
-                    { duration: 5000 } // Bildirim 5 saniye görünecek
+                    { duration: 5000 }
                 );
                 navigate("/");
             })
             .catch((err) => {
                 console.error("Anket oluşturulamadı:", err);
-                toast.error("Anket oluşturulamadı. Bir hata oluştu."); // Hata bildirimi
+                toast.error("Anket oluşturulamadı. Bir hata oluştu.");
             });
     };
 
@@ -190,9 +200,10 @@ function CreateSurvey() {
                     </div>
                     <div className="mb-4 sm:mb-5">
                         <label className="block text-gray-700 font-medium text-xs sm:text-sm mb-1">
-                            Geçerlilik Süresi
+                            Sonlanma Tarihi
                         </label>
                         <input
+                            min={minDateTime}
                             required
                             type="datetime-local"
                             value={expiresAt}

@@ -68,7 +68,7 @@ function Home() {
                                         {survey.active && !surveyExpired
                                             ? "Aktif"
                                             : surveyExpired
-                                                ? "Süresi Doldu"
+                                                ? "Anket sonlandı"
                                                 : "Pasif"}
                                     </span>
                                 </div>
