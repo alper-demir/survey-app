@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { FaSync } from "react-icons/fa";
+import { FaSync, FaCopy } from "react-icons/fa";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import toast from "react-hot-toast";
 
@@ -75,7 +75,7 @@ const VoteSurvey = () => {
 
             if (response.ok) {
                 setVoted(true);
-                toast.success("Oyunuz başarıyla kaydedildi!"); // Başarı bildirimi
+                toast.success("Oyunuz başarıyla kaydedildi!");
                 await fetchSurveyData();
             } else {
                 toast.error("Daha önce oy kullandınız.");
@@ -90,13 +90,17 @@ const VoteSurvey = () => {
 
     const handleRefresh = () => {
         fetchSurveyData();
-        toast("Veriler yenilendi.", {
-            icon: "🔄", // Yenileme ikonu
-            style: {
-                background: "#E0F7FA",
-                color: "#006064",
-            },
-        }); // Bilgi bildirimi
+        toast.success("Veriler yenilendi", { icon: "📋" });
+    };
+
+    const handleCopyLink = () => {
+        const surveyLink = window.location.href;
+        navigator.clipboard.writeText(surveyLink).then(() => {
+            toast.success("Anket linki kopyalandı!", { icon: "📋" });
+        }).catch((err) => {
+            console.error("Link kopyalanamadı:", err);
+            toast.error("Link kopyalanamadı. Bir hata oluştu.");
+        });
     };
 
     if (!survey) return <div className="text-center text-gray-500 mt-10 text-base sm:text-lg">Yükleniyor...</div>;
@@ -137,17 +141,26 @@ const VoteSurvey = () => {
                     </div>
                 </div>
 
-                {/* Başlık ve Yenile Butonu */}
+                {/* Başlık ve Butonlar */}
                 {!surveyExpired && (
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 sm:mb-4 gap-2 sm:gap-0">
                         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">{survey.title}</h1>
-                        <button
-                            onClick={handleRefresh}
-                            className="flex items-center gap-1.5 bg-blue-500 text-white px-3 py-1.5 rounded-full hover:bg-blue-600 transition-all font-medium text-sm cursor-pointer"
-                        >
-                            <FaSync className="h-4 w-4" />
-                            Yenile
-                        </button>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={handleRefresh}
+                                className="flex items-center gap-1.5 bg-blue-500 text-white px-3 py-1.5 rounded-full hover:bg-blue-600 transition-all font-medium text-sm cursor-pointer"
+                            >
+                                <FaSync className="h-4 w-4" />
+                                Yenile
+                            </button>
+                            <button
+                                onClick={handleCopyLink}
+                                className="flex items-center bg-gray-200 text-gray-700 p-2 rounded-full hover:bg-gray-300 transition-all cursor-pointer"
+                                title="Anket linkini kopyala"
+                            >
+                                <FaCopy className="h-4 w-4" />
+                            </button>
+                        </div>
                     </div>
                 )}
 
