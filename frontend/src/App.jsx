@@ -6,6 +6,7 @@ import MainLayout from "./layouts/MainLayout";
 import ToasterProvider from "./components/ToasterProvider";
 import AdminPanel from './pages/AdminPanel';
 import About from "./pages/About";
+import LoginAdmin from "./pages/LoginAdmin";
 
 function App() {
     return (
@@ -18,6 +19,7 @@ function App() {
                     <Route path="/admin" element={<AdminPanel />} />
                     <Route path="/about" element={<About />} />
                 </Route>
+                <Route path="/auth/admin" element={<LoginAdmin />} />
             </Routes>
             <ToasterProvider />
         </>
