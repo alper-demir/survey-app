@@ -33,7 +33,8 @@ const LoginAdmin = () => {
             if (response.ok) {
                 localStorage.setItem("isAdmin", "true");
                 toast.success("Giriş başarılı! Admin paneline yönlendiriliyorsunuz...");
-                navigate("/admin");
+                localStorage.setItem("token", data.token);
+                // navigate("/admin");
             } else {
                 toast.error(data.message || "E-posta veya şifre yanlış!");
             }

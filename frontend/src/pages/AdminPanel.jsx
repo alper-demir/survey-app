@@ -2,9 +2,12 @@ import { useEffect, useState } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { FaSort, FaSortAmountDownAlt, FaSortAmountDown } from "react-icons/fa";
 import toast from "react-hot-toast";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const AdminPanel = () => {
+
+    const navigate = useNavigate();
+
     const [overview, setOverview] = useState(null);
     const [surveys, setSurveys] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
@@ -45,7 +48,12 @@ const AdminPanel = () => {
 
     const fetchOverview = async () => {
         try {
-            const response = await fetch("http://localhost:8080/api/admin/overview");
+            const response = await fetch("http://localhost:8080/api/admin/overview", {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                },
+            });
             const data = await response.json();
             setOverview(data);
         } catch (err) {
@@ -68,9 +76,19 @@ const AdminPanel = () => {
                 ...(filters.title && { title: filters.title }),
             });
 
-            const response = await fetch(`http://localhost:8080/api/admin/surveys?${queryParams}`);
+            const response = await fetch(`http://localhost:8080/api/admin/surveys?${queryParams}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                },
+            });
             const data = await response.json();
             console.log(data);
+            if(data.status === 403){
+                toast.error("Erişim yetkiniz yok");
+                navigate("/")
+                
+            }
             setSurveys(data.content || []);
             setTotalPages(data.totalPages || 0);
         } catch (err) {
@@ -84,7 +102,10 @@ const AdminPanel = () => {
         try {
             const response = await fetch(`http://localhost:8080/api/admin/surveys/${id}/toggle-status`, {
                 method: "PATCH",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                },
             });
 
             if (response.ok) {
@@ -99,6 +120,7 @@ const AdminPanel = () => {
             toast.error("Anket durumu değiştirilemedi.");
         }
     };
+
 
     useEffect(() => {
         fetchOverview();

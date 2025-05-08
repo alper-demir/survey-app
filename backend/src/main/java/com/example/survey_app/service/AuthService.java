@@ -5,6 +5,7 @@ import com.example.survey_app.dto.LoginRequestDto;
 import com.example.survey_app.dto.LoginResponse;
 import com.example.survey_app.entity.User;
 import com.example.survey_app.repository.UserRepository;
+import com.example.survey_app.utils.JwtUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +15,11 @@ import java.util.Optional;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
 
-    public AuthService(UserRepository userRepository) {
+    public AuthService(UserRepository userRepository, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
+        this.jwtUtil = jwtUtil;
     }
 
     public ResponseEntity<?> login(LoginRequestDto request) {
@@ -34,8 +37,10 @@ public class AuthService {
             return ResponseEntity.status(401).body(new ErrorResponse("Şifre yanlış", 401));
         }
 
-        System.out.println(user);
+        String token = jwtUtil.generateToken(user.get().getEmail(), String.valueOf(user.get().getId()));
 
-        return ResponseEntity.ok(new LoginResponse(user.get()));
+        System.out.println(user + token);
+
+        return ResponseEntity.ok(new LoginResponse(user.get(), token));
     }
 }
