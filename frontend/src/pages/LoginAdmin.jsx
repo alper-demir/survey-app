@@ -4,6 +4,9 @@ import toast from "react-hot-toast";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const LoginAdmin = () => {
+
+    const URL = import.meta.env.VITE_SERVER_URL;
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -18,7 +21,7 @@ const LoginAdmin = () => {
         e.preventDefault();
 
         try {
-            const response = await fetch("http://localhost:8080/api/auth/admin", {
+            const response = await fetch(`${URL}/api/auth/admin`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

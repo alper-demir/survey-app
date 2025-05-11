@@ -5,6 +5,9 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 import toast from "react-hot-toast";
 
 function CreateSurvey() {
+
+    const URL = import.meta.env.VITE_SERVER_URL;
+
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [options, setOptions] = useState(["", ""]);
@@ -74,7 +77,7 @@ function CreateSurvey() {
         }
 
         const surveyData = { title, description, options, multipleChoice, publicResult, expiresAt };
-        fetch("http://localhost:8080/api/surveys", {
+        fetch(`${URL}/api/surveys`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(surveyData),

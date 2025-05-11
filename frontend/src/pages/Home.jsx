@@ -23,6 +23,10 @@ const isExpired = (expiresAt) => {
 };
 
 function Home() {
+
+    const URL = import.meta.env.VITE_SERVER_URL;
+    console.log(URL);
+    
     const [surveys, setSurveys] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
@@ -32,7 +36,7 @@ function Home() {
 
     const fetchSurveys = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/surveys?page=${currentPage}&size=${pageSize}`);
+            const response = await fetch(`${URL}/api/surveys?page=${currentPage}&size=${pageSize}`);
             const data = await response.json();
             setSurveys(data.content || []);
             setTotalPages(data.totalPages || 0);
