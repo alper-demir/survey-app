@@ -7,6 +7,7 @@ import com.example.survey_app.entity.User;
 import com.example.survey_app.repository.UserRepository;
 import com.example.survey_app.utils.JwtUtil;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,10 +17,12 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
+    private final UserService userService;
 
-    public AuthService(UserRepository userRepository, JwtUtil jwtUtil) {
+    public AuthService(UserRepository userRepository, JwtUtil jwtUtil, UserService userService) {
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
+        this.userService = userService;
     }
 
     public ResponseEntity<?> login(LoginRequestDto request) {
@@ -39,8 +42,16 @@ public class AuthService {
 
         String token = jwtUtil.generateToken(user.get().getEmail(), String.valueOf(user.get().getId()));
 
-        System.out.println(user + token);
-
         return ResponseEntity.ok(new LoginResponse(user.get(), token));
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            String email = jwtUtil.extractEmail(token);
+            UserDetails userDetails = userService.loadUserByUsername(email);
+            return jwtUtil.isTokenValid(token, userDetails);
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

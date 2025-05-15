@@ -58,21 +58,11 @@ const AdminPanel = () => {
     const fetchOverview = async () => {
         try {
             const response = await fetch(`${URL}/api/admin/overview`, {
-                headers
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                },
             });
-            console.log(response.status);
-
-            if (response.status === 401 || response.status === 403) {
-                toast.error("Oturum süresi dolmuş veya yetkisiz işlem.");
-                navigate("/");
-                return;
-            }
-
-            if (!response.ok) {
-                toast.error("Genel istatistikler alınamadı.");
-                return;
-            }
-
             const data = await response.json();
             setOverview(data);
         } catch (err) {
@@ -96,19 +86,11 @@ const AdminPanel = () => {
             });
 
             const response = await fetch(`${URL}/api/admin/surveys?${queryParams}`, {
-                headers
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                },
             });
-
-            if (response.status === 401 || response.status === 403) {
-                return;
-            }
-
-            if (!response.ok) {
-                toast.error("Anketler alınamadı.");
-                setSurveys([]);
-                return;
-            }
-
             const data = await response.json();
             setSurveys(data.content || []);
             setTotalPages(data.totalPages || 0);
