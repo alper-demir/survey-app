@@ -55,7 +55,10 @@ const AdminPanel = () => {
                 },
             });
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 
             if (response.status === 401 || response.status === 403) {
                 toast.error("Oturum süresi dolmuş veya yetkisiz işlem.");
