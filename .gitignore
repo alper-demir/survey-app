@@ -2,3 +2,6 @@
 /backend/.mvn
 /backend/src/main/resources/application.properties
 /frontend/.env
+/frontend/.env
+/frontend/build
+/frontend/dist

@@ -22,6 +22,10 @@ const isExpired = (expiresAt) => {
 };
 
 const VoteSurvey = () => {
+
+    const URL = import.meta.env.VITE_SERVER_URL;
+    console.log(URL);
+    
     const { slug } = useParams();
     const [survey, setSurvey] = useState(null);
     const [selectedOptions, setSelectedOptions] = useState([]);
@@ -30,7 +34,7 @@ const VoteSurvey = () => {
 
     const fetchSurveyData = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/surveys/${slug}`);
+            const response = await fetch(`${URL}/api/surveys/${slug}`);
             const data = await response.json();
             setSurvey(data);
         } catch (err) {
@@ -62,8 +66,8 @@ const VoteSurvey = () => {
         }
 
         const url = survey.multipleChoice
-            ? "http://localhost:8080/api/votes/multi"
-            : `http://localhost:8080/api/votes/${selectedOptions[0]}`;
+            ? `${URL}/api/votes/multi`
+            : `${URL}/api/votes/${selectedOptions[0]}`;
         const body = survey.multipleChoice ? { optionIds: selectedOptions } : null;
 
         try {

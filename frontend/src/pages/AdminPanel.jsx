@@ -6,6 +6,8 @@ import { Navigate, useNavigate } from "react-router-dom";
 
 const AdminPanel = () => {
 
+    const URL = import.meta.env.VITE_SERVER_URL;
+
     const navigate = useNavigate();
 
     const [overview, setOverview] = useState(null);
@@ -48,7 +50,7 @@ const AdminPanel = () => {
 
     const fetchOverview = async () => {
         try {
-            const response = await fetch("http://localhost:8080/api/admin/overview", {
+            const response = await fetch(`${URL}/api/admin/overview`, {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${localStorage.getItem("token")}`,
@@ -93,7 +95,7 @@ const AdminPanel = () => {
                 ...(filters.title && { title: filters.title }),
             });
 
-            const response = await fetch(`http://localhost:8080/api/admin/surveys?${queryParams}`, {
+            const response = await fetch(`${URL}/api/admin/surveys?${queryParams}`, {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${localStorage.getItem("token")}`,
@@ -133,7 +135,7 @@ const AdminPanel = () => {
 
     const toggleSurveyStatus = async (id) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/admin/surveys/${id}/toggle-status`, {
+            const response = await fetch(`${URL}/api/admin/surveys/${id}/toggle-status`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
