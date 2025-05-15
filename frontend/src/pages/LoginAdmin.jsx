@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -13,6 +13,33 @@ const LoginAdmin = () => {
     // if (isAdmin) {
     //     return <Navigate to="/admin" />;
     // }
+
+    const token = localStorage.getItem("token");
+
+    const checkAuthStatus = async () => {
+        if (token) {
+            const response = await fetch(`${URL}/api/auth/validate-token`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+            const data = await response.json();
+            console.log(data);
+
+            if (response.ok && data.valid && data.success) {
+                console.log(data);
+                navigate("/admin");
+            }
+        } else {
+            return <Navigate to="/" />;
+        }
+    }
+
+    useEffect(() => {
+        checkAuthStatus();
+    }, [])
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -34,7 +61,7 @@ const LoginAdmin = () => {
                 localStorage.setItem("isAdmin", "true");
                 toast.success("Giriş başarılı! Admin paneline yönlendiriliyorsunuz...");
                 localStorage.setItem("token", data.token);
-                // navigate("/admin");
+                navigate("/admin");
             } else {
                 toast.error(data.message || "E-posta veya şifre yanlış!");
             }

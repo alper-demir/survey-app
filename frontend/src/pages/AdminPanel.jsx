@@ -54,6 +54,26 @@ const AdminPanel = () => {
                     "Authorization": `Bearer ${localStorage.getItem("token")}`,
                 },
             });
+<<<<<<< Updated upstream
+=======
+
+            if (response.status === 401 || response.status === 403) {
+                toast.error("Oturum süresi dolmuş veya yetkisiz işlem.");
+                navigate("/");
+                return;
+            }
+
+            if(response.status === 500){
+                navigate("/");
+                return;
+            }
+
+            if (!response.ok) {
+                toast.error("Genel istatistikler alınamadı.");
+                return;
+            }
+
+>>>>>>> Stashed changes
             const data = await response.json();
             setOverview(data);
         } catch (err) {
@@ -82,6 +102,24 @@ const AdminPanel = () => {
                     "Authorization": `Bearer ${localStorage.getItem("token")}`,
                 },
             });
+<<<<<<< Updated upstream
+=======
+
+            if (response.status === 401 || response.status === 403) {
+                return;
+            }
+
+            if(response.status === 500){
+                return;
+            }
+
+            if (!response.ok) {
+                toast.error("Anketler alınamadı.");
+                setSurveys([]);
+                return;
+            }
+
+>>>>>>> Stashed changes
             const data = await response.json();
             console.log(data);
             if(data.status === 403){
