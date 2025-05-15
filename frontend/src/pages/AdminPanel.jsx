@@ -54,11 +54,6 @@ const AdminPanel = () => {
                     "Authorization": `Bearer ${localStorage.getItem("token")}`,
                 },
             });
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
 
             if (response.status === 401 || response.status === 403) {
                 toast.error("Oturum süresi dolmuş veya yetkisiz işlem.");
@@ -66,7 +61,7 @@ const AdminPanel = () => {
                 return;
             }
 
-            if(response.status === 500){
+            if (response.status === 500) {
                 navigate("/");
                 return;
             }
@@ -76,7 +71,6 @@ const AdminPanel = () => {
                 return;
             }
 
->>>>>>> Stashed changes
             const data = await response.json();
             setOverview(data);
         } catch (err) {
@@ -105,14 +99,13 @@ const AdminPanel = () => {
                     "Authorization": `Bearer ${localStorage.getItem("token")}`,
                 },
             });
-<<<<<<< Updated upstream
-=======
+
 
             if (response.status === 401 || response.status === 403) {
                 return;
             }
 
-            if(response.status === 500){
+            if (response.status === 500) {
                 return;
             }
 
@@ -122,13 +115,12 @@ const AdminPanel = () => {
                 return;
             }
 
->>>>>>> Stashed changes
             const data = await response.json();
             console.log(data);
-            if(data.status === 403){
+            if (data.status === 403) {
                 toast.error("Erişim yetkiniz yok");
                 navigate("/")
-                
+
             }
             setSurveys(data.content || []);
             setTotalPages(data.totalPages || 0);
