@@ -7,7 +7,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 const AdminPanel = () => {
 
     const URL = import.meta.env.VITE_SERVER_URL;
-
+    const token = localStorage.getItem("token");
     const navigate = useNavigate();
 
     const [overview, setOverview] = useState(null);
@@ -25,11 +25,18 @@ const AdminPanel = () => {
         sortDir: "desc",
     });
 
-    const isAdmin = localStorage.getItem("isAdmin") === "true";
-    if (!isAdmin) {
-        toast.error("Bu sayfaya erişim yetkiniz yok!");
-        return <Navigate to="/" />;
-    }
+    // const isAdmin = localStorage.getItem("isAdmin") === "true";
+
+    // if (!isAdmin) {
+    //     toast.error("Bu sayfaya erişim yetkiniz yok!");
+    //     return <Navigate to="/" />;
+    // }
+
+
+    const headers = {
+        "Content-Type": "application/json",
+        ...(token && { "Authorization": `Bearer ${token}` }),
+    };
 
     const getSurveyStatus = (survey) => {
         if (!survey || !survey.expiresAt) {
@@ -56,28 +63,11 @@ const AdminPanel = () => {
                     "Authorization": `Bearer ${localStorage.getItem("token")}`,
                 },
             });
-
-            if (response.status === 401 || response.status === 403) {
-                toast.error("Oturum süresi dolmuş veya yetkisiz işlem.");
-                navigate("/");
-                return;
-            }
-
-            if (response.status === 500) {
-                navigate("/");
-                return;
-            }
-
-            if (!response.ok) {
-                toast.error("Genel istatistikler alınamadı.");
-                return;
-            }
-
             const data = await response.json();
             setOverview(data);
         } catch (err) {
             console.error("Genel istatistikler yüklenemedi:", err);
-            toast.error("Genel istatistikler yüklenemedi.");
+            toast.error("Sunucuya ulaşılamıyor.");
         }
     };
 
@@ -101,37 +91,16 @@ const AdminPanel = () => {
                     "Authorization": `Bearer ${localStorage.getItem("token")}`,
                 },
             });
-
-
-            if (response.status === 401 || response.status === 403) {
-                return;
-            }
-
-            if (response.status === 500) {
-                return;
-            }
-
-            if (!response.ok) {
-                toast.error("Anketler alınamadı.");
-                setSurveys([]);
-                return;
-            }
-
             const data = await response.json();
-            console.log(data);
-            if (data.status === 403) {
-                toast.error("Erişim yetkiniz yok");
-                navigate("/")
-
-            }
             setSurveys(data.content || []);
             setTotalPages(data.totalPages || 0);
         } catch (err) {
             console.error("Anketler yüklenemedi:", err);
-            toast.error("Anketler yüklenemedi.");
+            toast.error("Sunucuya ulaşılamıyor.");
             setSurveys([]);
         }
     };
+
 
     const toggleSurveyStatus = async (id) => {
         try {

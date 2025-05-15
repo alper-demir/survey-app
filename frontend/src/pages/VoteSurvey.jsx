@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { FaSync, FaCopy } from "react-icons/fa";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import toast from "react-hot-toast";
+import Loading from "../components/Loading";
 
 const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -24,12 +25,12 @@ const isExpired = (expiresAt) => {
 const VoteSurvey = () => {
 
     const URL = import.meta.env.VITE_SERVER_URL;
-    console.log(URL);
-    
+
     const { slug } = useParams();
     const [survey, setSurvey] = useState(null);
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [voted, setVoted] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [animationParent] = useAutoAnimate();
 
     const fetchSurveyData = async () => {
@@ -60,6 +61,8 @@ const VoteSurvey = () => {
     };
 
     const handleVote = async () => {
+        console.log("tıklandı");
+        
         if (selectedOptions.length === 0) {
             toast.error("Lütfen en az bir seçenek seçiniz!");
             return;
@@ -71,6 +74,7 @@ const VoteSurvey = () => {
         const body = survey.multipleChoice ? { optionIds: selectedOptions } : null;
 
         try {
+            setLoading(true);
             const response = await fetch(url, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -90,6 +94,7 @@ const VoteSurvey = () => {
             toast.error("Daha önce oy kullandınız.");
             console.log(error);
         }
+        setLoading(false);
     };
 
     const handleRefresh = () => {
@@ -107,7 +112,7 @@ const VoteSurvey = () => {
         });
     };
 
-    if (!survey) return <div className="text-center text-gray-500 mt-10 text-base sm:text-lg">Yükleniyor...</div>;
+    if (!survey) return <div className="text-center mt-10 text-base sm:text-lg"><Loading color="text-blue-600" /></div>;
 
     const totalVotes = survey.options.reduce((sum, option) => sum + option.voteCount, 0);
     const surveyExpired = isExpired(survey.expiresAt);
@@ -230,9 +235,14 @@ const VoteSurvey = () => {
                 {canVote ? (
                     <button
                         onClick={handleVote}
-                        className="mt-4 sm:mt-6 w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white p-2.5 sm:p-3 rounded-lg hover:from-blue-600 hover:to-indigo-600 transition-colors font-medium text-sm sm:text-base cursor-pointer"
+                        className="mt-4 sm:mt-6 w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white p-2.5 sm:p-3 rounded-lg hover:from-blue-600 hover:to-indigo-600 transition-colors font-medium text-sm sm:text-base cursor-pointer disabled:cursor-not-allowed disabled:opacity-90"
+                        disabled={loading}
                     >
-                        Oy Ver
+                        {loading ? (
+                            <Loading />
+                        ) : (
+                            <span>Oy ver</span>
+                        )}
                     </button>
                 ) : (
                     <p className="mt-4 sm:mt-6 text-center text-gray-500 text-sm font-medium">

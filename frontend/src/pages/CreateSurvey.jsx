@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaTrash, FaCopy } from "react-icons/fa";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import toast from "react-hot-toast";
+import Loading from "../components/Loading";
 
 function CreateSurvey() {
 
@@ -15,6 +16,7 @@ function CreateSurvey() {
     const [publicResult, setPublicResult] = useState(false);
     const [expiresAt, setExpiresAt] = useState("");
     const [optionCount, setOptionCount] = useState(2);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [animationParent] = useAutoAnimate();
 
@@ -60,6 +62,7 @@ function CreateSurvey() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setLoading(true);
         if (options.length < 2) {
             toast.error("En az 2 seçenek eklemelisiniz!");
             return;
@@ -101,6 +104,7 @@ function CreateSurvey() {
                     </div>,
                     { duration: 7000 }
                 );
+                setLoading(false);
                 navigate("/");
             })
             .catch((err) => {
@@ -146,6 +150,7 @@ function CreateSurvey() {
                         <input
                             type="number"
                             min="2"
+                            max="10"
                             value={optionCount}
                             onChange={handleOptionCountChange}
                             onBlur={handleOptionCountBlur}
@@ -172,7 +177,7 @@ function CreateSurvey() {
                                         <button
                                             type="button"
                                             onClick={() => removeOption(index)}
-                                            className="text-red-500 hover:text-red-700 transition-all"
+                                            className="text-red-500 hover:text-red-700 transition-all cursor-pointer"
                                         >
                                             <FaTrash className="h-4 w-4" />
                                         </button>
@@ -229,9 +234,14 @@ function CreateSurvey() {
                     {/* Anketi Oluştur Butonu */}
                     <button
                         type="submit"
-                        className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 transition-colors text-white p-2 sm:p-2.5 rounded-lg font-medium text-sm cursor-pointer"
+                        className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 transition-colors text-white p-2 sm:p-2.5 rounded-lg font-medium text-sm cursor-pointer disabled:cursor-not-allowed disabled:opacity-90"
+                        disabled={loading}
                     >
-                        Anketi Oluştur
+                        {loading ? (
+                            <Loading />
+                        ) : (
+                            <span>Anketi Oluştur</span>
+                        )}
                     </button>
                 </form>
             </div>
